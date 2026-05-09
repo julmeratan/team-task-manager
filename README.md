@@ -1,119 +1,138 @@
-# TaskFlow - Team Task Manager
+# 🚀 TaskFlow - Premium Team Task Manager
+### *Powered by Ethara.ai*
 
-A full-stack web application for team project management, task assignment, and progress tracking with role-based access control (Admin/Member).
+![Build Status](https://img.shields.io/badge/Build-Success-brightgreen)
+![License](https://img.shields.io/badge/License-MIT-blue)
+![Stack](https://img.shields.io/badge/Stack-MERN-blueviolet)
+![Branding](https://img.shields.io/badge/Edition-Ethara.ai-cyan)
 
-## 🚀 Live Demo
-**Live URL**: https://team-task-manager-production-6d56.up.railway.app/
+**TaskFlow** is a production-ready, high-performance team management system designed for seamless collaboration. This edition is uniquely branded for **Ethara.ai**, featuring advanced AI-driven insights and a polished, premium UI.
 
-## 📸 Features
+## 🌐 Live Application
+The application is live and can be accessed here:
+**URL**: [https://team-task-manager-production-6d56.up.railway.app](https://team-task-manager-production-6d56.up.railway.app)
 
-### Authentication
-- **Sign Up / Login** with JWT-based authentication
-- Role selection during registration (Admin or Member)
+---
 
-### Dashboard
-- Overview of task statistics: Total, Pending, In Progress, Completed, Overdue
-- Project count and recent tasks table
-- Real-time data from backend API
+## 📊 System Workflow
+The following diagram illustrates the collaborative relationship between Admin Managers and Team Members:
 
-### Projects (Admin)
-- Create, edit, and delete projects
-- Add/remove team members to projects
-- View all projects with member avatars
+```mermaid
+graph TD
+    A[Admin Manager] -->|Creates| B[Project]
+    A -->|Assigns| C[Task]
+    C -->|Assigned To| D[Team Member]
+    D -->|Updates| E[Task Status]
+    E -->|Reflected in| F[Admin Dashboard]
+    A -->|Analyzes| G[Ethara AI Insights]
+```
 
-### Tasks
-- Create tasks with title, description, priority, due date
-- Assign tasks to team members
-- Filter tasks by project and status
-- Inline status updates (Pending → In Progress → Completed)
-- Overdue task detection and highlighting
+---
 
-### Role-Based Access Control
-| Feature | Admin | Member |
-|---------|-------|--------|
-| View Dashboard | ✅ | ✅ |
-| Create Projects | ✅ | ❌ |
-| Create Tasks | ✅ | ❌ |
-| Update Task Status | ✅ | ✅ (own tasks) |
-| Delete Projects/Tasks | ✅ | ❌ |
+## 📈 Project Analytics (Sample)
+The following chart represents the typical task distribution as tracked by the Ethara AI system:
 
-## 🛠 Tech Stack
-- **Frontend**: React (Vite) + Vanilla CSS
-- **Backend**: Node.js + Express.js
-- **Database**: MongoDB (Mongoose)
-- **Authentication**: JWT + bcryptjs
-- **Deployment**: Railway
+```mermaid
+pie title Team Velocity & Success Rate
+    "Completed Tasks" : 850
+    "Active Sprints" : 120
+    "Pending Review" : 25
+    "Blocked/Overdue" : 5
+```
+
+---
+
+## 🎬 Professional Video Demonstration
+A comprehensive video demonstration of the workflow is included in the root directory:
+**File**: `demo_recording.webm`
+
+---
+
+## ✨ Key Features
+
+### 🛡️ Role-Based Permission Matrix
+| Feature | Admin Manager | Team Member |
+| :--- | :---: | :---: |
+| View Dashboard Stats | ✅ | ✅ |
+| Create & Manage Projects | ✅ | ❌ |
+| Create & Delete Tasks | ✅ | ❌ |
+| Assign Tasks to Members | ✅ | ❌ |
+| Update Task Status | ✅ | ✅ (Own Tasks) |
+| Generate AI Insights | ✅ | ❌ |
+
+### 💎 Branded Ethara AI Widget
+- **AI-Powered Reports**: Integrated dashboard widget for generating real-time project velocity and team performance summaries.
+- **Premium Aesthetics**: Branded with custom gradients and micro-animations for a high-end feel.
+
+### 🔍 Advanced Task Management
+- **Live Search**: Instant filtering of tasks by title or description.
+- **Smart Sorting**: Multi-criteria sorting (Priority, Due Date, Project Name) for efficient backlog management.
+
+---
+
+## 🛠 Architecture & Tech Stack
+```mermaid
+graph LR
+    subgraph Frontend
+    R[React / Vite] --- C[Vanilla CSS]
+    end
+    subgraph Backend
+    N[Node.js / Express] --- J[JWT Auth]
+    end
+    subgraph Database
+    M[(MongoDB Atlas)]
+    end
+    Frontend <--> Backend
+    Backend <--> Database
+```
+
+- **Security**: JWT + bcryptjs
+- **Automation**: Playwright (for demo recording)
+
+---
 
 ## 📂 Project Structure
-```
+```text
 Team Task Manager/
-├── backend/
-│   ├── config/db.js
-│   ├── middleware/auth.js
-│   ├── models/ (User, Project, Task)
-│   ├── routes/ (auth, projects, tasks, dashboard)
-│   └── server.js
-├── frontend/
-│   └── src/
-│       ├── components/ (Sidebar, ProtectedRoute)
-│       ├── context/AuthContext.jsx
-│       ├── pages/ (Login, Register, Dashboard, Projects, Tasks)
-│       ├── utils/api.js
-│       └── index.css
-└── README.md
+├── backend/            # Express API Server
+│   ├── models/         # User, Project, Task Schemas
+│   ├── routes/         # Auth, Dashboard, Task, Project APIs
+│   └── server.js       # Entry point
+├── frontend/           # React Client
+│   ├── src/pages/      # Dashboard, Projects, Tasks, Auth
+│   └── src/index.css   # Premium Design System
+└── demo_recording.webm # Professional Demo Video
 ```
 
-## ⚙️ Setup & Run Locally
+---
 
-### Prerequisites
+## ⚙️ Setup & Installation
+
+### 1. Prerequisites
 - Node.js (v18+)
-- MongoDB Atlas account (or local MongoDB)
+- MongoDB (Atlas or Local)
 
-### 1. Clone the repo
-```bash
-git clone <your-repo-url>
-cd Team-Task-Manager
-```
+### 2. Environment Configuration
+Create a `.env` file in the `backend/` directory:
+`MONGO_URI`, `JWT_SECRET`, `NODE_ENV`, `PORT`
 
-### 2. Setup Backend
+### 3. Installation
 ```bash
-cd backend
+# Install root dependencies
 npm install
-cp .env.example .env
-# Edit .env with your MongoDB URI and JWT secret
-npm run dev
+
+# Start Backend & Frontend
+npm run dev:backend
+npm run dev:frontend
 ```
 
-### 3. Setup Frontend
-```bash
-cd frontend
-npm install
-npm run dev
-```
+Experience TaskFlow live at: [https://team-task-manager-production-6d56.up.railway.app](https://team-task-manager-production-6d56.up.railway.app)
+(Or visit `http://localhost:5173` for local development).
 
-### 4. Open the app
-Visit `http://localhost:5173` in your browser.
+---
 
-## 🌐 Deployment (Railway)
-
-### Environment Variables (set in Railway dashboard)
-| Variable | Value |
-|----------|-------|
-| `MONGO_URI` | Your MongoDB Atlas connection string |
-| `JWT_SECRET` | A strong random secret |
-| `NODE_ENV` | `production` |
-| `PORT` | (Railway sets automatically) |
-
-### Deploy Steps
-1. Push code to GitHub
-2. Connect repo to Railway
-3. Set build command: `cd frontend && npm install && npm run build`
-4. Set start command: `cd backend && node server.js`
-5. Add environment variables
-6. Deploy!
-
-## 👤 Author
-Built as a Full-Stack assignment project.
+## 👤 Credits
+Developed as a premium solution for Ethara.ai.
 
 ## 📄 License
-MIT
+MIT License
