@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import { HiOutlinePlus, HiOutlineTrash, HiOutlinePencil } from 'react-icons/hi';
+import toast from 'react-hot-toast';
 
 export default function Projects() {
   const { isAdmin } = useAuth();
@@ -31,12 +32,13 @@ export default function Projects() {
       if (editId) await api.put(`/projects/${editId}`, form);
       else await api.post('/projects', form);
       setShowModal(false); fetchData();
-    } catch (err) { alert(err.response?.data?.msg || 'Error'); }
+      toast.success(editId ? 'Project updated successfully!' : 'Project created successfully! 🚀');
+    } catch (err) { toast.error(err.response?.data?.msg || 'Something went wrong'); }
   };
 
   const handleDelete = async (id) => {
     if (!confirm('Delete this project?')) return;
-    try { await api.delete(`/projects/${id}`); fetchData(); } catch (err) { alert('Error'); }
+    try { await api.delete(`/projects/${id}`); fetchData(); toast.success('Project deleted'); } catch (err) { toast.error('Failed to delete project'); }
   };
 
   if (loading) return <div className="loader"><div className="spinner"></div></div>;

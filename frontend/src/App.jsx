@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Sidebar from './components/Sidebar';
@@ -34,6 +35,12 @@ export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <Toaster position="top-right" toastOptions={{
+          duration: 3000,
+          style: { background: '#111631', color: '#eef2ff', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '14px', fontSize: '14px', fontFamily: 'Inter, sans-serif', boxShadow: '0 8px 32px rgba(0,0,0,0.4)' },
+          success: { iconTheme: { primary: '#10b981', secondary: '#111631' } },
+          error: { iconTheme: { primary: '#ef4444', secondary: '#111631' } },
+        }} />
         <AppRoutes />
       </AuthProvider>
     </BrowserRouter>

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import { HiOutlinePlus, HiOutlineTrash } from 'react-icons/hi';
+import toast from 'react-hot-toast';
 
 export default function Tasks() {
   const { isAdmin } = useAuth();
@@ -11,6 +12,8 @@ export default function Tasks() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [filters, setFilters] = useState({ project: '', status: '' });
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState('dueDate');
   const [form, setForm] = useState({ title: '', description: '', status: 'pending', priority: 'medium', dueDate: '', project: '', assignedTo: '' });
 
   const fetchData = async () => {
@@ -28,21 +31,46 @@ export default function Tasks() {
   const openCreate = () => { setForm({ title: '', description: '', status: 'pending', priority: 'medium', dueDate: '', project: '', assignedTo: '' }); setShowModal(true); };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try { await api.post('/tasks', form); setShowModal(false); fetchData(); }
-    catch (err) { alert(err.response?.data?.msg || err.response?.data?.errors?.[0]?.msg || 'Error'); }
+    try { await api.post('/tasks', form); setShowModal(false); fetchData(); toast.success('Task created successfully! ✅'); }
+    catch (err) { toast.error(err.response?.data?.msg || err.response?.data?.errors?.[0]?.msg || 'Failed to create task'); }
   };
   const updateStatus = async (id, status) => {
-    try { await api.put(`/tasks/${id}`, { status }); fetchData(); } catch (err) { alert('Error'); }
+    try {
+      await api.put(`/tasks/${id}`, { status }); fetchData();
+      const label = status === 'completed' ? 'Task completed! 🎉' : status === 'in-progress' ? 'Task moved to In Progress 🔄' : 'Task set to Pending';
+      toast.success(label);
+    } catch (err) { toast.error('Failed to update status'); }
   };
   const deleteTask = async (id) => {
     if (!confirm('Delete this task?')) return;
-    try { await api.delete(`/tasks/${id}`); fetchData(); } catch (err) { alert('Error'); }
+    try { await api.delete(`/tasks/${id}`); fetchData(); toast.success('Task deleted'); } catch (err) { toast.error('Failed to delete task'); }
   };
 
   const formatDate = (d) => d ? new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
   const isOverdue = (t) => t.status !== 'completed' && t.dueDate && new Date(t.dueDate) < new Date();
 
+  const getFilteredAndSortedTasks = () => {
+    let result = [...tasks];
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter(t => t.title.toLowerCase().includes(q) || t.description?.toLowerCase().includes(q));
+    }
+    result.sort((a, b) => {
+      if (sortBy === 'name') return a.title.localeCompare(b.title);
+      if (sortBy === 'priority') {
+        const pVals = { high: 3, medium: 2, low: 1 };
+        return pVals[b.priority] - pVals[a.priority];
+      }
+      if (!a.dueDate) return 1;
+      if (!b.dueDate) return -1;
+      return new Date(a.dueDate) - new Date(b.dueDate);
+    });
+    return result;
+  };
+
   if (loading) return <div className="loader"><div className="spinner"></div></div>;
+
+  const displayTasks = getFilteredAndSortedTasks();
 
   return (
     <div className="fade-in">
@@ -51,7 +79,20 @@ export default function Tasks() {
         {isAdmin && <button className="btn btn-primary" onClick={openCreate}><HiOutlinePlus /> New Task</button>}
       </div>
 
-      <div className="filters-bar">
+      <div className="filters-bar" style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+        <input 
+          type="text" 
+          className="form-control" 
+          placeholder="Search tasks..." 
+          value={searchQuery} 
+          onChange={e => setSearchQuery(e.target.value)} 
+          style={{ flex: 1, minWidth: 200 }} 
+        />
+        <select className="form-control" value={sortBy} onChange={e => setSortBy(e.target.value)}>
+          <option value="dueDate">Sort by Due Date</option>
+          <option value="priority">Sort by Priority</option>
+          <option value="name">Sort by Name</option>
+        </select>
         <select className="form-control" value={filters.project} onChange={e => setFilters({ ...filters, project: e.target.value })}>
           <option value="">All Projects</option>
           {projects.map(p => <option key={p._id} value={p._id}>{p.name}</option>)}
@@ -64,7 +105,7 @@ export default function Tasks() {
         </select>
       </div>
 
-      {tasks.length === 0 ? (
+      {displayTasks.length === 0 ? (
         <div className="card empty-state"><div className="empty-icon">📋</div><h3>No tasks found</h3><p>Adjust filters or create a new task</p></div>
       ) : (
         <>
@@ -72,7 +113,7 @@ export default function Tasks() {
             <table className="task-table">
               <thead><tr><th>Task</th><th>Project</th><th>Assignee</th><th>Priority</th><th>Due</th><th>Status</th>{isAdmin && <th></th>}</tr></thead>
               <tbody>
-                {tasks.map(t => (
+                {displayTasks.map(t => (
                   <tr key={t._id}>
                     <td style={{ fontWeight: 600 }}>{t.title}</td>
                     <td>{t.project?.name || '—'}</td>
@@ -93,7 +134,7 @@ export default function Tasks() {
             </table>
           </div>
           <div className="task-cards">
-            {tasks.map(t => (
+            {displayTasks.map(t => (
               <div key={t._id} className="card task-card-item">
                 <div className="task-card-header"><span className="task-card-title">{t.title}</span><span className={`badge badge-${t.priority}`}>{t.priority}</span></div>
                 <div className="task-card-meta">

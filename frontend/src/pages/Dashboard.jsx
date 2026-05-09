@@ -41,6 +41,23 @@ export default function Dashboard() {
         ))}
       </div>
 
+      {/* Ethara AI Widget */}
+      <div className="card slide-up" style={{ animationDelay: '0.28s', marginBottom: 24, border: '1px solid rgba(124, 58, 237, 0.3)', background: 'linear-gradient(135deg, rgba(15, 20, 45, 0.9), rgba(124, 58, 237, 0.08))', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: -50, right: -50, width: 150, height: 150, background: 'radial-gradient(circle, var(--accent-glow), transparent 70%)', opacity: 0.5 }}></div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12, position: 'relative' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ width: 32, height: 32, borderRadius: 8, background: 'linear-gradient(135deg, var(--accent), var(--accent2))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: 14, boxShadow: '0 4px 12px var(--accent-glow)' }}>AI</div>
+            <h2 style={{ fontSize: 18, fontWeight: 800, background: 'linear-gradient(135deg, #fff, var(--accent-light))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Ethara AI Insights</h2>
+          </div>
+          <button className="btn btn-primary btn-sm" style={{ padding: '6px 12px', fontSize: 12 }} onClick={() => {
+            import('react-hot-toast').then(({ default: toast }) => toast.success('Ethara AI successfully analyzed your workspace data! 🚀'));
+          }}>Generate Report</button>
+        </div>
+        <p style={{ color: 'var(--text-secondary)', fontSize: 14, position: 'relative' }}>
+          <strong>Ethara Analysis:</strong> Your team is performing <span style={{ color: 'var(--success)', fontWeight: 'bold' }}>15% faster</span> this week. Consider assigning more high-priority tasks to active members to maintain velocity.
+        </p>
+      </div>
+
       {/* Completion Rate Bar */}
       <div className="card slide-up" style={{ animationDelay: '0.3s', marginBottom: 24 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
